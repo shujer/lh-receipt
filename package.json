@@ -1,0 +1,19 @@
+{
+  "name": "lh-receipt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:auth": "jest ./receipts/auth --detectOpenHandles"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.0.1",
+    "jest-puppeteer": "^5.0.4",
+    "lighthouse": "^7.5.0",
+    "puppeteer": "^9.1.1"
+  }
+}
