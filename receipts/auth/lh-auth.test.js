@@ -5,9 +5,10 @@ const CONFIGS = require("./configs");
 
 /**
  * @description login
- * @param {import('puppeteer').Page} page
+ * @param {import('puppeteer').Browser} browser
  */
-const login = async (page) => {
+const loginBeforeRun = async (browser) => {
+  const page = await browser.newPage();
   await page.goto(CONFIGS.LOGIN_URL, {
     waitUntil: "networkidle0",
   });
@@ -21,6 +22,7 @@ const login = async (page) => {
     page.waitForNavigation({ waitUntil: "networkidle0" }),
   ]);
   await page.screenshot({ path: "./receipts/screenshots/auth_redirect.png" });
+  await page.close();
 };
 
 const CHROME_DEBUG_PORT = 8042;
@@ -42,8 +44,6 @@ const runLighthouse = async (url) => {
 describe("Auth", () => {
   /** @type {import('puppeteer').Browser} */
   let browser;
-  /** @type {import('puppeteer').Page} */
-  let page;
 
   beforeAll(async () => {
     browser = await puppeteer.launch({
@@ -57,20 +57,8 @@ describe("Auth", () => {
     await browser.close();
   });
 
-  beforeEach(async () => {
-    page = await browser.newPage();
-  });
-
-  afterEach(async () => {
-    await page.close();
-  });
-
-  it("login", async () => {
-    await login(page);
-    expect(page.url()).toMatch(CONFIGS.TARGET_URL);
-  });
-
   it("lighthouse", async () => {
+    await loginBeforeRun(browser);
     await runLighthouse(CONFIGS.TARGET_URL);
   });
 });
